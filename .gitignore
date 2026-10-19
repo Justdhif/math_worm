@@ -1,0 +1,36 @@
+# ==============================================================================
+# .gitignore untuk Proyek Free Pascal (Math Worm)
+# ==============================================================================
+
+# 1. File Hasil Kompilasi & Build Artifacts Free Pascal
+*.exe
+*.o
+*.ppu
+*.or
+*.rsj
+*.compiled
+*.a
+*.so
+*.dylib
+
+# 2. File Backup Otomatis Editor / IDE (Lazarus, VS Code, Notepad++, dll.)
+*.bak
+*~
+*.swp
+*.swo
+backup/
+
+# 3. Direktori Pengaturan Editor / IDE
+.vscode/
+.idea/
+
+# 4. File Sampah Sistem Operasi
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# 5. Pengecualian Khusus (Whitelist)
+# Pastikan SDL2.dll tetap di-commit agar siapa pun yang clone bisa langsung menjalankan game
+!SDL2.dll
