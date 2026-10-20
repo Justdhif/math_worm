@@ -292,9 +292,9 @@ begin
   DrawText(renderer, 'P : JEDA (PAUSE)    |  ESC : KELUAR', 140, 380, 2);
 
   // Tombol Mulai
-  btnRect.x := 180;
+  btnRect.x := 200;
   btnRect.y := 420;
-  btnRect.w := 440;
+  btnRect.w := 400;
   btnRect.h := 46;
   SDL_SetRenderDrawColor(renderer, 25, 75, 50, 255);
   SDL_RenderFillRect(renderer, @btnRect);
@@ -302,7 +302,7 @@ begin
   SDL_RenderDrawRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 120, 255, 180, 255);
-  DrawTextCentered(renderer, 'SPASI / ENTER: MULAI MAIN', 400, 434, 3);
+  DrawTextCentered(renderer, 'ENTER: MULAI MAIN', 400, 434, 3);
 
   // Keterangan keluar
   SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
@@ -371,7 +371,7 @@ begin
   SDL_RenderDrawRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 130, 235, 255, 255);
-  DrawTextCentered(renderer, 'P / SPASI: LANJUT MAIN', 400, 335, 2);
+  DrawTextCentered(renderer, 'ENTER: LANJUT MAIN', 400, 335, 2);
 
   SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
   DrawTextCentered(renderer, 'M: MENU UTAMA  |  ESC: KELUAR', 400, 395, 2);
@@ -457,7 +457,7 @@ begin
   SDL_RenderDrawRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 120, 255, 180, 255);
-  DrawTextCentered(renderer, 'SPASI: MAIN LAGI', 400, 365, 2);
+  DrawTextCentered(renderer, 'ENTER: MAIN LAGI', 400, 365, 2);
 
   SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
   DrawTextCentered(renderer, 'M: MENU UTAMA  |  ESC: KELUAR', 400, 415, 2);

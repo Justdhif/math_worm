@@ -81,7 +81,7 @@ Permainan mendukung tombol panah maupun tombol standar gamer (WASD):
 | **A** atau **Panah Kiri ($\leftarrow$)** | Belok ke Kiri |
 | **D** atau **Panah Kanan ($\rightarrow$)** | Belok ke Kanan |
 | **P** | Jeda / Lanjutkan Permainan (*Pause / Resume*) |
-| **SPASI** atau **ENTER** | Mulai Main dari Menu / Mulai Ulang saat Game Over / Lanjut dari Pause |
+| **ENTER** | Mulai Main dari Menu / Mulai Ulang saat Game Over / Lanjut dari Pause |
 | **M** | Kembali ke Menu Utama (dari layar Pause atau Game Over) |
 | **ESC** | Jeda Permainan / Kembali ke Menu / Keluar dari Game |
 

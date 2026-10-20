@@ -73,7 +73,7 @@ begin
           STATE_MENU:
           begin
             case event.key.keysym.sym of
-              SDLK_SPACE, SDLK_RETURN:
+              SDLK_RETURN, SDLK_KP_ENTER, SDLK_SPACE:
                 StartNewGame(game);
               SDLK_ESCAPE:
                 running := False;
@@ -104,7 +104,7 @@ begin
           STATE_PAUSED:
           begin
             case event.key.keysym.sym of
-              SDLK_p, SDLK_SPACE:
+              SDLK_p, SDLK_RETURN, SDLK_KP_ENTER, SDLK_SPACE:
                 TogglePause(game);
               SDLK_m, SDLK_ESCAPE:
                 game.state := STATE_MENU;
@@ -115,7 +115,7 @@ begin
           STATE_GAMEOVER:
           begin
             case event.key.keysym.sym of
-              SDLK_SPACE, SDLK_RETURN:
+              SDLK_RETURN, SDLK_KP_ENTER, SDLK_SPACE:
                 StartNewGame(game);
               SDLK_m:
                 game.state := STATE_MENU;
