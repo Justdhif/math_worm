@@ -197,6 +197,188 @@ begin
   end;
 end;
 
+// Layar Menu Utama (Start Menu)
+procedure DrawMainMenu(renderer: PSDL_Renderer);
+var
+  menuBox, headerRect, innerBorder, infoBox, ctrlBox, btnRect, lineRect: TSDL_Rect;
+begin
+  // Background jendela
+  SDL_SetRenderDrawColor(renderer, 15, 20, 30, 255);
+  SDL_RenderClear(renderer);
+
+  // Kotak utama menu
+  menuBox.x := 80;
+  menuBox.y := 35;
+  menuBox.w := 640;
+  menuBox.h := 530;
+
+  SDL_SetRenderDrawColor(renderer, 22, 28, 42, 255);
+  SDL_RenderFillRect(renderer, @menuBox);
+
+  // Garis border menu
+  SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
+  SDL_RenderDrawRect(renderer, @menuBox);
+  innerBorder.x := menuBox.x + 3;
+  innerBorder.y := menuBox.y + 3;
+  innerBorder.w := menuBox.w - 6;
+  innerBorder.h := menuBox.h - 6;
+  SDL_SetRenderDrawColor(renderer, 45, 60, 85, 255);
+  SDL_RenderDrawRect(renderer, @innerBorder);
+
+  // Pita aksen atas
+  headerRect.x := menuBox.x + 4;
+  headerRect.y := menuBox.y + 4;
+  headerRect.w := menuBox.w - 8;
+  headerRect.h := 8;
+  SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
+  SDL_RenderFillRect(renderer, @headerRect);
+
+  // Judul Utama Game
+  SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
+  DrawTextCentered(renderer, 'MATH WORM', 400, 65, 7);
+
+  // Subjudul
+  SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+  DrawTextCentered(renderer, 'GAME EDUKASI MATEMATIKA INTERAKTIF', 400, 130, 2);
+
+  // Garis pembatas
+  lineRect.x := 120;
+  lineRect.y := 155;
+  lineRect.w := 560;
+  lineRect.h := 2;
+  SDL_SetRenderDrawColor(renderer, 45, 58, 80, 255);
+  SDL_RenderFillRect(renderer, @lineRect);
+
+  // Kotak Panduan Bermain
+  infoBox.x := 120;
+  infoBox.y := 175;
+  infoBox.w := 560;
+  infoBox.h := 130;
+  SDL_SetRenderDrawColor(renderer, 16, 20, 32, 255);
+  SDL_RenderFillRect(renderer, @infoBox);
+  SDL_SetRenderDrawColor(renderer, 45, 55, 75, 255);
+  SDL_RenderDrawRect(renderer, @infoBox);
+
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  DrawText(renderer, 'CARA BERMAIN:', 140, 190, 2);
+
+  SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
+  DrawText(renderer, '1. LIHAT SOAL (+, -, X, :) DI HEADER ATAS', 140, 215, 2);
+
+  SDL_SetRenderDrawColor(renderer, 120, 255, 170, 255);
+  DrawText(renderer, '2. MAKAN ANGKA JAWABAN YANG BENAR (+10 SKOR)', 140, 240, 2);
+
+  SDL_SetRenderDrawColor(renderer, 255, 185, 65, 255);
+  DrawText(renderer, '3. HINDARI JAWABAN SALAH (MODAL 3 NYAWA)', 140, 265, 2);
+
+  SDL_SetRenderDrawColor(renderer, 255, 95, 95, 255);
+  DrawText(renderer, '4. JANGAN SAMPAI MENABRAK BADAN SENDIRI!', 140, 290, 2);
+
+  // Kotak Petunjuk Kontrol
+  ctrlBox.x := 120;
+  ctrlBox.y := 320;
+  ctrlBox.w := 560;
+  ctrlBox.h := 80;
+  SDL_SetRenderDrawColor(renderer, 16, 20, 32, 255);
+  SDL_RenderFillRect(renderer, @ctrlBox);
+  SDL_SetRenderDrawColor(renderer, 45, 55, 75, 255);
+  SDL_RenderDrawRect(renderer, @ctrlBox);
+
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  DrawText(renderer, 'KONTROL:', 140, 335, 2);
+
+  SDL_SetRenderDrawColor(renderer, 180, 195, 215, 255);
+  DrawText(renderer, 'WASD / TOMBOL PANAH : MENGARAHKAN ULAR', 140, 358, 2);
+  DrawText(renderer, 'P : JEDA (PAUSE)    |  ESC : KELUAR', 140, 380, 2);
+
+  // Tombol Mulai
+  btnRect.x := 180;
+  btnRect.y := 420;
+  btnRect.w := 440;
+  btnRect.h := 46;
+  SDL_SetRenderDrawColor(renderer, 25, 75, 50, 255);
+  SDL_RenderFillRect(renderer, @btnRect);
+  SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
+  SDL_RenderDrawRect(renderer, @btnRect);
+
+  SDL_SetRenderDrawColor(renderer, 120, 255, 180, 255);
+  DrawTextCentered(renderer, 'SPASI / ENTER: MULAI MAIN', 400, 434, 3);
+
+  // Keterangan keluar
+  SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
+  DrawTextCentered(renderer, 'ESC: KELUAR DARI GAME', 400, 490, 2);
+end;
+
+// Pop-up dialog saat game di-Pause (Jeda)
+procedure DrawPauseModal(renderer: PSDL_Renderer; const g: TGame);
+var
+  overlayRect, cardRect, headerRect, innerBorder, btnRect: TSDL_Rect;
+begin
+  // Overlay gelap transparan di arena
+  overlayRect.x := g.area.x;
+  overlayRect.y := g.area.y;
+  overlayRect.w := g.area.w;
+  overlayRect.h := g.area.h;
+
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(renderer, 10, 14, 22, 215);
+  SDL_RenderFillRect(renderer, @overlayRect);
+
+  // Kotak dialog jeda
+  cardRect.x := 190;
+  cardRect.y := 150;
+  cardRect.w := 420;
+  cardRect.h := 310;
+
+  SDL_SetRenderDrawColor(renderer, 22, 28, 42, 255);
+  SDL_RenderFillRect(renderer, @cardRect);
+
+  headerRect.x := cardRect.x + 4;
+  headerRect.y := cardRect.y + 4;
+  headerRect.w := cardRect.w - 8;
+  headerRect.h := 8;
+  SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
+  SDL_RenderFillRect(renderer, @headerRect);
+
+  SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
+  SDL_RenderDrawRect(renderer, @cardRect);
+  innerBorder.x := cardRect.x + 3;
+  innerBorder.y := cardRect.y + 3;
+  innerBorder.w := cardRect.w - 6;
+  innerBorder.h := cardRect.h - 6;
+  SDL_SetRenderDrawColor(renderer, 45, 65, 85, 255);
+  SDL_RenderDrawRect(renderer, @innerBorder);
+
+  // Judul
+  SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
+  DrawTextCentered(renderer, 'PAUSED', 400, 180, 6);
+
+  SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+  DrawTextCentered(renderer, 'PERMAINAN SEDANG DIJEDA', 400, 245, 2);
+
+  // Info status saat ini
+  SDL_SetRenderDrawColor(renderer, 180, 195, 215, 255);
+  DrawTextCentered(renderer, 'SKOR SAAT INI: ' + NumberToString(g.score), 400, 285, 2);
+
+  // Tombol lanjut
+  btnRect.x := 230;
+  btnRect.y := 325;
+  btnRect.w := 340;
+  btnRect.h := 38;
+  SDL_SetRenderDrawColor(renderer, 25, 60, 75, 255);
+  SDL_RenderFillRect(renderer, @btnRect);
+  SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
+  SDL_RenderDrawRect(renderer, @btnRect);
+
+  SDL_SetRenderDrawColor(renderer, 130, 235, 255, 255);
+  DrawTextCentered(renderer, 'P / SPASI: LANJUT MAIN', 400, 335, 2);
+
+  SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
+  DrawTextCentered(renderer, 'M: MENU UTAMA  |  ESC: KELUAR', 400, 395, 2);
+
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+end;
+
 // Dialog pop-up layar Game Over
 procedure DrawGameOverModal(renderer: PSDL_Renderer; const g: TGame);
 var
@@ -265,9 +447,9 @@ begin
   DrawText(renderer, NumberToString(g.worm.length), 470, 298, 3);
 
   // Tombol aksi
-  btnRect.x := 230;
+  btnRect.x := 210;
   btnRect.y := 355;
-  btnRect.w := 340;
+  btnRect.w := 380;
   btnRect.h := 38;
   SDL_SetRenderDrawColor(renderer, 25, 70, 48, 255);
   SDL_RenderFillRect(renderer, @btnRect);
@@ -278,14 +460,22 @@ begin
   DrawTextCentered(renderer, 'SPASI: MAIN LAGI', 400, 365, 2);
 
   SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
-  DrawTextCentered(renderer, 'ESC: KELUAR', 400, 415, 2);
+  DrawTextCentered(renderer, 'M: MENU UTAMA  |  ESC: KELUAR', 400, 415, 2);
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 end;
 
 procedure RenderGame(renderer: PSDL_Renderer; var g: TGame);
 begin
-  // Clear screen
+  // Jika sedang di menu utama, gambar tampilan menu
+  if g.state = STATE_MENU then
+  begin
+    DrawMainMenu(renderer);
+    SDL_RenderPresent(renderer);
+    Exit;
+  end;
+
+  // Latar belakang game
   SDL_SetRenderDrawColor(renderer, 15, 20, 30, 255);
   SDL_RenderClear(renderer);
 
@@ -294,7 +484,10 @@ begin
   DrawFoods(renderer, g);
   DrawWorm(renderer, g);
 
-  if g.state = STATE_GAMEOVER then
+  // Modal dialog pop-up sesuai kondisi
+  if g.state = STATE_PAUSED then
+    DrawPauseModal(renderer, g)
+  else if g.state = STATE_GAMEOVER then
     DrawGameOverModal(renderer, g);
 
   SDL_RenderPresent(renderer);

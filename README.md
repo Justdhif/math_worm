@@ -24,11 +24,16 @@
 * **Memakan Jawaban SALAH**:
   * Nyawa cacing berkurang **1** (dari modal awal 3 nyawa).
   * Muncul peringatan merah `SALAH! -1 NYAWA` dan soal diacak ulang.
+* **Layar Menu Utama (Start Menu)**:
+  * Menampilkan judul game retro, penjelasan cara bermain, panduan kontrol tombol, dan tombol mulai.
+* **Sistem Pause (Jeda Permainan)**:
+  * Tekan tombol **P** atau **ESC** saat bermain untuk menjeda waktu dan pergerakan ular.
+  * Tampil kartu pop-up jeda dengan opsi melanjutkan atau kembali ke menu utama.
 * **Kondisi Kalah (Game Over)**:
   1. **Nyawa Habis (0)**: Pemain salah menjawab soal sebanyak 3 kali.
   2. **Menabrak Badan Sendiri (*Self-Collision*)**: Kepala cacing berbelok dan menabrak salah satu bagian ruas badannya sendiri.
 * **Layar Game Over**:
-  * Muncul pop-up dialog yang menampilkan alasan kalah secara dinamis, skor akhir, dan panjang cacing yang diraih, serta tombol interaksi untuk memulai ulang permainan (*Press Space to Restart*).
+  * Muncul pop-up dialog yang menampilkan alasan kalah secara dinamis, skor akhir, dan panjang cacing yang diraih, serta tombol interaksi untuk mengulang permainan atau kembali ke menu utama.
 
 ---
 
@@ -75,8 +80,10 @@ Permainan mendukung tombol panah maupun tombol standar gamer (WASD):
 | **S** atau **Panah Bawah ($\downarrow$)** | Belok ke Bawah |
 | **A** atau **Panah Kiri ($\leftarrow$)** | Belok ke Kiri |
 | **D** atau **Panah Kanan ($\rightarrow$)** | Belok ke Kanan |
-| **SPASI** atau **ENTER** | Mulai Ulang Permainan (*Restart*) saat Game Over |
-| **ESC** | Keluar dari Game (*Quit*) kapan saja |
+| **P** | Jeda / Lanjutkan Permainan (*Pause / Resume*) |
+| **SPASI** atau **ENTER** | Mulai Main dari Menu / Mulai Ulang saat Game Over / Lanjut dari Pause |
+| **M** | Kembali ke Menu Utama (dari layar Pause atau Game Over) |
+| **ESC** | Jeda Permainan / Kembali ke Menu / Keluar dari Game |
 
 ---
 

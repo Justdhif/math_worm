@@ -22,8 +22,10 @@ const
   MAX_LIVES       = 3;
 
   // State permainan
-  STATE_PLAYING   = 0;
-  STATE_GAMEOVER  = 1;
+  STATE_MENU      = 0;
+  STATE_PLAYING   = 1;
+  STATE_PAUSED    = 2;
+  STATE_GAMEOVER  = 3;
 
 type
   // Koordinat 2D pada grid

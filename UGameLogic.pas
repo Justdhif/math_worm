@@ -19,6 +19,8 @@ type
   end;
 
 procedure InitGame(var g: TGame);
+procedure StartNewGame(var g: TGame);
+procedure TogglePause(var g: TGame);
 procedure SpawnFoods(var g: TGame);
 procedure ChangeDirection(var g: TGame; newDX, newDY: Integer);
 procedure UpdateGameStep(var g: TGame);
@@ -81,17 +83,12 @@ begin
   end;
 end;
 
-// Reset status permainan ke kondisi awal
-procedure InitGame(var g: TGame);
+// Mulai sesi permainan baru
+procedure StartNewGame(var g: TGame);
 begin
-  g.area.x := 40;
-  g.area.y := 84;
-  g.area.w := 720;
-  g.area.h := 480;
-
   g.worm.length := START_LENGTH;
 
-  // Tiga ruas cacing awal
+  // Tiga ruas cacing awal di tengah arena
   g.worm.segments[0].x := g.area.x + 10 * CELL_SIZE;
   g.worm.segments[0].y := g.area.y + 10 * CELL_SIZE;
 
@@ -116,6 +113,31 @@ begin
   g.feedback.text := '';
 
   SpawnFoods(g);
+end;
+
+// Inisialisasi awal aplikasi (menampilkan menu utama)
+procedure InitGame(var g: TGame);
+begin
+  g.area.x := 40;
+  g.area.y := 84;
+  g.area.w := 720;
+  g.area.h := 480;
+
+  g.state := STATE_MENU;
+  g.score := 0;
+  g.lives := MAX_LIVES;
+  g.gameOverReason := '';
+  g.feedback.timer := 0;
+  g.feedback.text := '';
+end;
+
+// Jeda atau lanjutkan permainan (pause toggle)
+procedure TogglePause(var g: TGame);
+begin
+  if g.state = STATE_PLAYING then
+    g.state := STATE_PAUSED
+  else if g.state = STATE_PAUSED then
+    g.state := STATE_PLAYING;
 end;
 
 // Validasi input arah (mencegah berbalik 180 derajat langsung)

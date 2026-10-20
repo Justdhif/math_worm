@@ -51,6 +51,8 @@ begin
     '=': begin rows[0]:=0; rows[1]:=7; rows[2]:=0; rows[3]:=7; rows[4]:=0; end;
     '?': begin rows[0]:=7; rows[1]:=1; rows[2]:=3; rows[3]:=0; rows[4]:=2; end;
     '!': begin rows[0]:=2; rows[1]:=2; rows[2]:=2; rows[3]:=0; rows[4]:=2; end;
+    '.': begin rows[0]:=0; rows[1]:=0; rows[2]:=0; rows[3]:=0; rows[4]:=2; end;
+    ',': begin rows[0]:=0; rows[1]:=0; rows[2]:=0; rows[3]:=2; rows[4]:=4; end;
 
     'A': begin rows[0]:=2; rows[1]:=5; rows[2]:=7; rows[3]:=5; rows[4]:=5; end;
     'B': begin rows[0]:=6; rows[1]:=5; rows[2]:=6; rows[3]:=5; rows[4]:=6; end;
