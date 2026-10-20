@@ -1,9 +1,3 @@
-{ ============================================================================
-  Unit        : UTypes
-  Deskripsi   : Modul penyimpan konstanta global, struktur data (record), 
-                dan fungsi utilitas dasar untuk game Math Worm.
-  Tugas Akhir : Pemrograman Dasar
-  ============================================================================ }
 unit UTypes;
 
 interface
@@ -11,68 +5,57 @@ interface
 uses
   SDL2;
 
-{ ----------------------------------------------------------------------------
-  1. KONSTANTA GLOBAL GAME
-  ---------------------------------------------------------------------------- }
 const
-  { Dimensi Jendela Permainan (dalam piksel) }
+  // Ukuran jendela
   WINDOW_WIDTH    = 800;
   WINDOW_HEIGHT   = 600;
 
-  { Ukuran tiap petak/grid di arena (24x24 piksel) }
+  // Ukuran per petak grid (24x24 piksel)
   CELL_SIZE       = 24;
 
-  { Aturan Cacing / Ular }
-  MAX_WORM_LENGTH = 500; { Batas maksimum panjang segmen badan cacing }
-  START_LENGTH    = 3;   { Panjang awal cacing saat permainan dimulai }
+  // Aturan cacing
+  MAX_WORM_LENGTH = 500;
+  START_LENGTH    = 3;
 
-  { Aturan Gameplay }
-  MAX_FOODS       = 4;   { Batas maksimum pilihan jawaban makanan di arena }
-  MAX_LIVES       = 3;   { Jumlah nyawa awal pemain }
+  // Gameplay
+  MAX_FOODS       = 4;
+  MAX_LIVES       = 3;
 
-  { Status Permainan (State Machine) }
-  STATE_PLAYING   = 0;   { Sedang bermain }
-  STATE_GAMEOVER  = 1;   { Kalah / Game Over }
+  // State permainan
+  STATE_PLAYING   = 0;
+  STATE_GAMEOVER  = 1;
 
-{ ----------------------------------------------------------------------------
-  2. STRUKTUR DATA (RECORD)
-  ---------------------------------------------------------------------------- }
 type
-  { Representasi koordinat 2D (X, Y) pada grid }
+  // Koordinat 2D pada grid
   TPoint = record
     x, y: Integer;
   end;
 
-  { Struktur data lengkap untuk Cacing / Ular }
+  // Data cacing (posisi ruas, panjang, dan arah)
   TWorm = record
-    segments: array[0..MAX_WORM_LENGTH - 1] of TPoint; { Array posisi segmen badan (index 0 = kepala) }
-    length: Integer;                                    { Panjang badan saat ini }
-    dx, dy: Integer;                                    { Arah pergerakan horizontal & vertikal aktif }
-    nextDX, nextDY: Integer;                            { Buffer arah berikutnya dari input pemain }
+    segments: array[0..MAX_WORM_LENGTH - 1] of TPoint;
+    length: Integer;
+    dx, dy: Integer;
+    nextDX, nextDY: Integer;
   end;
 
-  { Struktur data kumpulan makanan / pilihan jawaban di arena }
+  // Data posisi dan status makanan di arena
   TFoodState = record
-    pos: array[0..MAX_FOODS - 1] of TPoint;       { Koordinat masing-masing makanan }
-    active: array[0..MAX_FOODS - 1] of Boolean;   { Status apakah makanan masih aktif / belum dimakan }
+    pos: array[0..MAX_FOODS - 1] of TPoint;
+    active: array[0..MAX_FOODS - 1] of Boolean;
   end;
 
-  { Struktur data notifikasi pesan teks (misal: "BENAR! +10 SKOR") }
+  // Teks umpan balik sementara (Benar/Salah)
   TFeedback = record
-    text: String;     { Teks pesan yang ditampilkan }
-    timer: Integer;   { Durasi berapa frame/tick pesan akan terlihat }
-    r, g, b: Byte;    { Warna teks (RGB) }
+    text: String;
+    timer: Integer;
+    r, g, b: Byte;
   end;
 
-{ ----------------------------------------------------------------------------
-  3. FUNGSI UTILITAS UMUM
-  ---------------------------------------------------------------------------- }
-{ Mengubah integer menjadi string (karena Free Pascal dasar menggunakan Str) }
 function NumberToString(n: Integer): String;
 
 implementation
 
-{ Implementasi fungsi konversi integer ke string }
 function NumberToString(n: Integer): String;
 var
   s: String;
