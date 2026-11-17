@@ -3,7 +3,7 @@ unit UTypes;
 interface
 
 uses
-  SDL2;
+  SDL3;
 
 const
   // Ukuran jendela

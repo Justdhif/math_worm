@@ -3,7 +3,7 @@ unit UGameRenderer;
 interface
 
 uses
-  SDL2, UTypes, UFont, UMathEngine, UGameLogic;
+  SDL3, UTypes, UFont, UMathEngine, UGameLogic;
 
 procedure RenderGame(renderer: PSDL_Renderer; var g: TGame);
 
@@ -53,7 +53,7 @@ end;
 procedure DrawArenaAndGrid(renderer: PSDL_Renderer; const g: TGame);
 var
   col, row: Integer;
-  gridRect: TSDL_Rect;
+  gridRect: TSDL_FRect;
 begin
   // Background arena
   SDL_SetRenderDrawColor(renderer, 28, 36, 48, 255);
@@ -61,11 +61,11 @@ begin
 
   // Garis tepi arena
   SDL_SetRenderDrawColor(renderer, 55, 68, 88, 255);
-  SDL_RenderDrawRect(renderer, @g.area);
+  SDL_RenderRect(renderer, @g.area);
 
   // Garis grid vertikal & horizontal
   SDL_SetRenderDrawColor(renderer, 35, 44, 56, 255);
-  for col := 0 to (g.area.w div CELL_SIZE) do
+  for col := 0 to (Trunc(g.area.w) div CELL_SIZE) do
   begin
     gridRect.x := g.area.x + col * CELL_SIZE;
     gridRect.y := g.area.y;
@@ -74,7 +74,7 @@ begin
     SDL_RenderFillRect(renderer, @gridRect);
   end;
 
-  for row := 0 to (g.area.h div CELL_SIZE) do
+  for row := 0 to (Trunc(g.area.h) div CELL_SIZE) do
   begin
     gridRect.x := g.area.x;
     gridRect.y := g.area.y + row * CELL_SIZE;
@@ -88,7 +88,7 @@ end;
 procedure DrawFoods(renderer: PSDL_Renderer; const g: TGame);
 var
   k: Integer;
-  foodRect: TSDL_Rect;
+  foodRect: TSDL_FRect;
   numStr: String;
   tw, tx, ty: Integer;
 begin
@@ -106,7 +106,7 @@ begin
       SDL_RenderFillRect(renderer, @foodRect);
 
       SDL_SetRenderDrawColor(renderer, 255, 215, 120, 255);
-      SDL_RenderDrawRect(renderer, @foodRect);
+      SDL_RenderRect(renderer, @foodRect);
 
       // Angka di tengah kotak
       numStr := NumberToString(g.question.choices[k]);
@@ -124,8 +124,8 @@ end;
 procedure DrawWorm(renderer: PSDL_Renderer; const g: TGame);
 var
   j: Integer;
-  wormRect: TSDL_Rect;
-  eye1, eye2: TSDL_Rect;
+  wormRect: TSDL_FRect;
+  eye1, eye2: TSDL_FRect;
   headX, headY: Integer;
 begin
   // Ruas badan
@@ -200,7 +200,7 @@ end;
 // Layar Menu Utama (Start Menu)
 procedure DrawMainMenu(renderer: PSDL_Renderer);
 var
-  menuBox, headerRect, innerBorder, infoBox, ctrlBox, btnRect, lineRect: TSDL_Rect;
+  menuBox, headerRect, innerBorder, infoBox, ctrlBox, btnRect, lineRect: TSDL_FRect;
 begin
   // Background jendela
   SDL_SetRenderDrawColor(renderer, 15, 20, 30, 255);
@@ -217,13 +217,13 @@ begin
 
   // Garis border menu
   SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
-  SDL_RenderDrawRect(renderer, @menuBox);
+  SDL_RenderRect(renderer, @menuBox);
   innerBorder.x := menuBox.x + 3;
   innerBorder.y := menuBox.y + 3;
   innerBorder.w := menuBox.w - 6;
   innerBorder.h := menuBox.h - 6;
   SDL_SetRenderDrawColor(renderer, 45, 60, 85, 255);
-  SDL_RenderDrawRect(renderer, @innerBorder);
+  SDL_RenderRect(renderer, @innerBorder);
 
   // Pita aksen atas
   headerRect.x := menuBox.x + 4;
@@ -257,7 +257,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 16, 20, 32, 255);
   SDL_RenderFillRect(renderer, @infoBox);
   SDL_SetRenderDrawColor(renderer, 45, 55, 75, 255);
-  SDL_RenderDrawRect(renderer, @infoBox);
+  SDL_RenderRect(renderer, @infoBox);
 
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
   DrawText(renderer, 'CARA BERMAIN:', 140, 190, 2);
@@ -282,7 +282,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 16, 20, 32, 255);
   SDL_RenderFillRect(renderer, @ctrlBox);
   SDL_SetRenderDrawColor(renderer, 45, 55, 75, 255);
-  SDL_RenderDrawRect(renderer, @ctrlBox);
+  SDL_RenderRect(renderer, @ctrlBox);
 
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
   DrawText(renderer, 'KONTROL:', 140, 335, 2);
@@ -299,7 +299,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 25, 75, 50, 255);
   SDL_RenderFillRect(renderer, @btnRect);
   SDL_SetRenderDrawColor(renderer, 80, 245, 140, 255);
-  SDL_RenderDrawRect(renderer, @btnRect);
+  SDL_RenderRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 120, 255, 180, 255);
   DrawTextCentered(renderer, 'ENTER: MULAI MAIN', 400, 434, 3);
@@ -312,7 +312,7 @@ end;
 // Pop-up dialog saat game di-Pause (Jeda)
 procedure DrawPauseModal(renderer: PSDL_Renderer; const g: TGame);
 var
-  overlayRect, cardRect, headerRect, innerBorder, btnRect: TSDL_Rect;
+  overlayRect, cardRect, headerRect, innerBorder, btnRect: TSDL_FRect;
 begin
   // Overlay gelap transparan di arena
   overlayRect.x := g.area.x;
@@ -341,13 +341,13 @@ begin
   SDL_RenderFillRect(renderer, @headerRect);
 
   SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
-  SDL_RenderDrawRect(renderer, @cardRect);
+  SDL_RenderRect(renderer, @cardRect);
   innerBorder.x := cardRect.x + 3;
   innerBorder.y := cardRect.y + 3;
   innerBorder.w := cardRect.w - 6;
   innerBorder.h := cardRect.h - 6;
   SDL_SetRenderDrawColor(renderer, 45, 65, 85, 255);
-  SDL_RenderDrawRect(renderer, @innerBorder);
+  SDL_RenderRect(renderer, @innerBorder);
 
   // Judul
   SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
@@ -368,7 +368,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 25, 60, 75, 255);
   SDL_RenderFillRect(renderer, @btnRect);
   SDL_SetRenderDrawColor(renderer, 80, 225, 255, 255);
-  SDL_RenderDrawRect(renderer, @btnRect);
+  SDL_RenderRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 130, 235, 255, 255);
   DrawTextCentered(renderer, 'ENTER: LANJUT MAIN', 400, 335, 2);
@@ -382,7 +382,7 @@ end;
 // Dialog pop-up layar Game Over
 procedure DrawGameOverModal(renderer: PSDL_Renderer; const g: TGame);
 var
-  overlayRect, cardRect, headerRect, innerBorder, statBox, btnRect: TSDL_Rect;
+  overlayRect, cardRect, headerRect, innerBorder, statBox, btnRect: TSDL_FRect;
 begin
   // Overlay gelap transparan
   overlayRect.x := g.area.x;
@@ -411,13 +411,13 @@ begin
   SDL_RenderFillRect(renderer, @headerRect);
 
   SDL_SetRenderDrawColor(renderer, 255, 65, 85, 255);
-  SDL_RenderDrawRect(renderer, @cardRect);
+  SDL_RenderRect(renderer, @cardRect);
   innerBorder.x := cardRect.x + 3;
   innerBorder.y := cardRect.y + 3;
   innerBorder.w := cardRect.w - 6;
   innerBorder.h := cardRect.h - 6;
   SDL_SetRenderDrawColor(renderer, 70, 35, 50, 255);
-  SDL_RenderDrawRect(renderer, @innerBorder);
+  SDL_RenderRect(renderer, @innerBorder);
 
   // Teks judul & alasan kalah
   SDL_SetRenderDrawColor(renderer, 255, 65, 85, 255);
@@ -434,7 +434,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 14, 18, 28, 255);
   SDL_RenderFillRect(renderer, @statBox);
   SDL_SetRenderDrawColor(renderer, 45, 55, 75, 255);
-  SDL_RenderDrawRect(renderer, @statBox);
+  SDL_RenderRect(renderer, @statBox);
 
   SDL_SetRenderDrawColor(renderer, 180, 195, 215, 255);
   DrawText(renderer, 'SKOR AKHIR', 235, 268, 2);
@@ -454,7 +454,7 @@ begin
   SDL_SetRenderDrawColor(renderer, 25, 70, 48, 255);
   SDL_RenderFillRect(renderer, @btnRect);
   SDL_SetRenderDrawColor(renderer, 60, 210, 120, 255);
-  SDL_RenderDrawRect(renderer, @btnRect);
+  SDL_RenderRect(renderer, @btnRect);
 
   SDL_SetRenderDrawColor(renderer, 120, 255, 180, 255);
   DrawTextCentered(renderer, 'ENTER: MAIN LAGI', 400, 365, 2);

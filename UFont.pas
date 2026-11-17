@@ -3,7 +3,7 @@ unit UFont;
 interface
 
 uses
-  SDL2;
+  SDL3;
 
 // Menggambar satu karakter font 3x5
 procedure DrawChar(renderer: PSDL_Renderer; ch: Char; posX, posY, pixelSize: Integer);
@@ -25,7 +25,7 @@ implementation
 procedure DrawChar(renderer: PSDL_Renderer; ch: Char; posX, posY, pixelSize: Integer);
 var
   r, c: Integer;
-  pixelRect: TSDL_Rect;
+  pixelRect: TSDL_FRect;
   rowVal: Byte;
   rows: array[0..4] of Byte;
 begin
@@ -133,7 +133,7 @@ end;
 procedure DrawHeart(renderer: PSDL_Renderer; posX, posY, pixelSize: Integer; filled: Boolean);
 var
   r, c: Integer;
-  pixelRect: TSDL_Rect;
+  pixelRect: TSDL_FRect;
   rowVal: Byte;
   rows: array[0..4] of Byte;
 begin

@@ -3,11 +3,11 @@ unit UGameLogic;
 interface
 
 uses
-  SDL2, Math, UTypes, UMathEngine;
+  SDL3, Math, UTypes, UMathEngine;
 
 type
   TGame = record
-    area: TSDL_Rect;
+    area: TSDL_FRect;
     worm: TWorm;
     foods: TFoodState;
     question: TMathQuestion;
@@ -37,16 +37,16 @@ var
 begin
   GenerateNewMathQuestion(g.question);
 
-  maxCols := g.area.w div CELL_SIZE;
-  maxRows := g.area.h div CELL_SIZE;
+  maxCols := Trunc(g.area.w) div CELL_SIZE;
+  maxRows := Trunc(g.area.h) div CELL_SIZE;
 
   for k := 0 to g.question.numChoices - 1 do
   begin
     g.foods.active[k] := True;
     repeat
       validPosition := True;
-      fx := g.area.x + Random(maxCols) * CELL_SIZE;
-      fy := g.area.y + Random(maxRows) * CELL_SIZE;
+      fx := Trunc(g.area.x) + Random(maxCols) * CELL_SIZE;
+      fy := Trunc(g.area.y) + Random(maxRows) * CELL_SIZE;
 
       // Cek tidak menimpa badan ular
       for j := 0 to g.worm.length - 1 do
@@ -89,8 +89,8 @@ begin
   g.worm.length := START_LENGTH;
 
   // Tiga ruas cacing awal di tengah arena
-  g.worm.segments[0].x := g.area.x + 10 * CELL_SIZE;
-  g.worm.segments[0].y := g.area.y + 10 * CELL_SIZE;
+  g.worm.segments[0].x := Trunc(g.area.x) + 10 * CELL_SIZE;
+  g.worm.segments[0].y := Trunc(g.area.y) + 10 * CELL_SIZE;
 
   g.worm.segments[1].x := g.worm.segments[0].x - CELL_SIZE;
   g.worm.segments[1].y := g.worm.segments[0].y;
@@ -173,15 +173,15 @@ begin
   headY := g.worm.segments[0].y + g.worm.dy;
 
   // Tembus batas arena (wrap-around)
-  if headX < g.area.x then
-    headX := g.area.x + g.area.w - CELL_SIZE
-  else if headX >= g.area.x + g.area.w then
-    headX := g.area.x;
+  if headX < Trunc(g.area.x) then
+    headX := Trunc(g.area.x + g.area.w) - CELL_SIZE
+  else if headX >= Trunc(g.area.x + g.area.w) then
+    headX := Trunc(g.area.x);
 
-  if headY < g.area.y then
-    headY := g.area.y + g.area.h - CELL_SIZE
-  else if headY >= g.area.y + g.area.h then
-    headY := g.area.y;
+  if headY < Trunc(g.area.y) then
+    headY := Trunc(g.area.y + g.area.h) - CELL_SIZE
+  else if headY >= Trunc(g.area.y + g.area.h) then
+    headY := Trunc(g.area.y);
 
   // Cek tabrak badan sendiri (self-collision)
   selfCollision := False;

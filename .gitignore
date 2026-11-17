@@ -32,5 +32,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 # 5. Pengecualian Khusus (Whitelist)
-# Pastikan SDL2.dll tetap di-commit agar siapa pun yang clone bisa langsung menjalankan game
-!SDL2.dll
+# Pastikan SDL3.dll tetap di-commit agar siapa pun yang clone bisa langsung menjalankan game
+!SDL3.dll
