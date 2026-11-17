@@ -6,9 +6,13 @@ uses
   SDL3;
 
 const
-  // Ukuran jendela
-  WINDOW_WIDTH    = 800;
-  WINDOW_HEIGHT   = 600;
+  // Ukuran logika koordinat sistem permainan (resolusi dasar retro)
+  LOGICAL_WIDTH   = 800;
+  LOGICAL_HEIGHT  = 600;
+
+  // Ukuran default jendela aplikasi (lebih besar & pas di monitor modern, mendukung resize)
+  WINDOW_WIDTH    = 1024;
+  WINDOW_HEIGHT   = 768;
 
   // Ukuran per petak grid (24x24 piksel)
   CELL_SIZE       = 24;

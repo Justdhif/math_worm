@@ -27,6 +27,9 @@ procedure UpdateGameStep(var g: TGame);
 
 implementation
 
+uses
+  UAudio;
+
 // Menempatkan makanan acak di grid tanpa menimpa ular atau makanan lain
 procedure SpawnFoods(var g: TGame);
 var
@@ -113,6 +116,7 @@ begin
   g.feedback.text := '';
 
   SpawnFoods(g);
+  PlaySFX(SFX_START);
 end;
 
 // Inisialisasi awal aplikasi (menampilkan menu utama)
@@ -135,9 +139,15 @@ end;
 procedure TogglePause(var g: TGame);
 begin
   if g.state = STATE_PLAYING then
-    g.state := STATE_PAUSED
+  begin
+    g.state := STATE_PAUSED;
+    PlaySFX(SFX_PAUSE);
+  end
   else if g.state = STATE_PAUSED then
+  begin
     g.state := STATE_PLAYING;
+    PlaySFX(SFX_PAUSE);
+  end;
 end;
 
 // Validasi input arah (mencegah berbalik 180 derajat langsung)
@@ -198,6 +208,7 @@ begin
   begin
     g.state := STATE_GAMEOVER;
     g.gameOverReason := 'MENABRAK BADAN SENDIRI!';
+    PlaySFX(SFX_GAMEOVER);
     Exit;
   end;
 
@@ -235,6 +246,7 @@ begin
       g.feedback.b := 120;
       g.feedback.timer := 15;
 
+      PlaySFX(SFX_CORRECT);
       SpawnFoods(g);
     end
     else
@@ -251,9 +263,13 @@ begin
       begin
         g.state := STATE_GAMEOVER;
         g.gameOverReason := 'NYAWA TELAH HABIS!';
+        PlaySFX(SFX_GAMEOVER);
       end
       else
+      begin
+        PlaySFX(SFX_WRONG);
         SpawnFoods(g);
+      end;
     end;
   end;
 

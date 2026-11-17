@@ -3,6 +3,7 @@ program MathWorm;
 uses
   SDL3,
   UTypes,
+  UAudio,
   UGameLogic,
   UGameRenderer;
 
@@ -17,37 +18,46 @@ var
 begin
   Randomize;
 
-  // Inisialisasi video SDL3
-  if not SDL_Init(SDL_INIT_VIDEO) then
+  // Inisialisasi video & audio SDL3
+  if not SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO) then
   begin
-    WriteLn('Error: Gagal menginisialisasi subsistem video SDL3.');
+    WriteLn('Error: Gagal menginisialisasi subsistem SDL3 (', SDL_GetError, ').');
     Halt(1);
   end;
 
-  // Buat jendela aplikasi
+  // Buat jendela aplikasi dengan ukuran baru (1024x768) dan mendukung resize
   window := SDL_CreateWindow(
     'Math Worm - Game Cacing Edukasi Matematika',
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
-    0
+    SDL_WINDOW_RESIZABLE
   );
 
   if window = nil then
   begin
-    WriteLn('Error: Gagal membuat jendela SDL3.');
+    WriteLn('Error: Gagal membuat jendela SDL3 (', SDL_GetError, ').');
     SDL_Quit;
     Halt(1);
   end;
 
-  // Buat renderer
+  // Tempatkan jendela di tengah layar monitor
+  SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+  // Buat renderer grafis
   renderer := SDL_CreateRenderer(window, nil);
   if renderer = nil then
   begin
-    WriteLn('Error: Gagal membuat renderer SDL3.');
+    WriteLn('Error: Gagal membuat renderer SDL3 (', SDL_GetError, ').');
     SDL_DestroyWindow(window);
     SDL_Quit;
     Halt(1);
   end;
+
+  // Skalakan resolusi logika internal (800x600) ke ukuran jendela (letterbox tajam)
+  SDL_SetRenderLogicalPresentation(renderer, LOGICAL_WIDTH, LOGICAL_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+  // Inisialisasi sistem audio (SFX dan musik latar)
+  InitAudio;
 
   // Inisialisasi status awal (masuk ke Menu Utama)
   InitGame(game);
@@ -66,6 +76,10 @@ begin
 
       if event.type_ = SDL_EVENT_KEY_DOWN then
       begin
+        // Tombol global kontrol musik BGM
+        if event.key.key = SDLK_b then
+          ToggleBGM;
+
         case game.state of
           // 1. INPUT PADA MENU UTAMA
           STATE_MENU:
@@ -133,12 +147,16 @@ begin
       UpdateGameStep(game);
     end;
 
+    // Update buffer streaming audio sintesis
+    UpdateAudio;
+
     // Render tampilan frame
     RenderGame(renderer, game);
     SDL_Delay(1);
   end;
 
-  // Bersihkan resource SDL3
+  // Bersihkan resource audio & SDL3
+  CloseAudio;
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit;

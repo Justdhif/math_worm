@@ -43,8 +43,9 @@ Kode program dibangun menggunakan pola perancangan **Modular MVC (Model-View-Con
 
 ```text
 math_worm/
-├── MathWorm.pas          # Controller  : Program utama, SDL3 loop, event input
+├── MathWorm.pas          # Controller  : Program utama, SDL3 loop, event input, window setup
 ├── UTypes.pas            # Data/Struct : Tipe data record (TWorm, TGame, TPoint) & konstanta
+├── UAudio.pas            # Audio/Sound : Generator musik latar (BGM chiptune) & efek suara (SFX)
 ├── UMathEngine.pas       # Model (Math): Generator 4 operasi hitung & pilihan angka unik
 ├── UGameLogic.pas        # Model (Game): Logika ular, wrap-around dinding, tabrakan, skor/nyawa
 ├── UGameRenderer.pas     # View (Render): Penggambaran header, arena, grid, ular, & Game Over
@@ -61,11 +62,12 @@ math_worm/
 
 | Nama File | Peran | Baris Kode | Deskripsi Singkat |
 | :--- | :---: | :---: | :--- |
-| **`MathWorm.pas`** | **Controller** | ~140 | Mengatur siklus hidup game: inisialisasi SDL3, jendela (*window*), *renderer*, *event loop* pembaca input keyboard, serta koordinasi *update* dan *render*. |
-| **`UTypes.pas`** | **Data / Types** | ~65 | Menyimpan konstanta permainan (`CELL_SIZE`, `MAX_LIVES`, dsb.), struktur record (`TPoint`, `TWorm`, `TFoodState`, `TFeedback`), dan fungsi utilitas `NumberToString`. |
+| **`MathWorm.pas`** | **Controller** | ~160 | Mengatur siklus hidup game: inisialisasi SDL3, jendela aplikasi (*window* resizable 1024x768), presentasi resolusi logika, *event loop*, serta pemanggilan audio dan render. |
+| **`UTypes.pas`** | **Data / Types** | ~70 | Menyimpan konstanta permainan (`LOGICAL_WIDTH/HEIGHT`, `WINDOW_WIDTH/HEIGHT`, `CELL_SIZE`, dsb.), struktur record (`TPoint`, `TWorm`, `TFoodState`, `TFeedback`), dan fungsi `NumberToString`. |
+| **`UAudio.pas`** | **Audio / Synth** | ~360 | Mensintesis suara retro chiptune 8-bit secara mandiri: melodi musik latar (BGM 2 channel lead+bass) dan efek suara SFX (makan benar, salah, pause, game over, start) menggunakan `SDL_AudioStream`. |
 | **`UMathEngine.pas`** | **Model (Math)** | ~95 | Menghasilkan soal matematika secara acak untuk 4 operasi aritmatika dengan hasil bilangan bulat positif $\le 99$, serta menyusun pilihan angka jawaban yang unik. |
-| **`UGameLogic.pas`** | **Model (Logic)** | ~250 | Mengelola dunia game: penempatan koordinat makanan acak, validasi arah gerakan cacing, mekanisme tembus dinding (*wrap-around*), deteksi tabrak badan sendiri, dan pembaruan skor/nyawa. |
-| **`UGameRenderer.pas`** | **View** | ~480 | Menggambar semua elemen visual: layar menu utama, header, garis grid arena, kotak makanan berwarna emas, ruas badan cacing, animasi arah mata cacing, dialog Pause, hingga pop-up Game Over. |
+| **`UGameLogic.pas`** | **Model (Logic)** | ~280 | Mengelola dunia game: penempatan koordinat makanan acak, validasi arah gerakan cacing, mekanisme tembus dinding (*wrap-around*), deteksi tabrak badan sendiri, dan pembaruan skor/nyawa serta pemicu SFX. |
+| **`UGameRenderer.pas`** | **View** | ~490 | Menggambar semua elemen visual: layar menu utama, header, garis grid arena, kotak makanan berwarna emas, ruas badan cacing, animasi arah mata cacing, dialog Pause, hingga pop-up Game Over. |
 | **`UFont.pas`** | **View (Font)** | ~180 | Menggambar huruf (A–Z), angka (0–9), simbol, dan ikon hati nyawa menggunakan matriks piksel retro 3x5 mandiri tanpa ketergantungan library font eksternal. |
 
 ---
@@ -80,6 +82,7 @@ Permainan mendukung tombol panah maupun tombol standar gamer (WASD):
 | **S** atau **Panah Bawah ($\downarrow$)** | Belok ke Bawah |
 | **A** atau **Panah Kiri ($\leftarrow$)** | Belok ke Kiri |
 | **D** atau **Panah Kanan ($\rightarrow$)** | Belok ke Kanan |
+| **B** | Menyalakan / Mematikan Musik Latar (*BGM On/Off*) |
 | **P** | Jeda / Lanjutkan Permainan (*Pause / Resume*) |
 | **ENTER** | Mulai Main dari Menu / Mulai Ulang saat Game Over / Lanjut dari Pause |
 | **M** | Kembali ke Menu Utama (dari layar Pause atau Game Over) |
@@ -106,35 +109,61 @@ Compiler Free Pascal (`fpc`) diarahkan untuk membaca folder unit SDL3 melalui op
 
 ---
 
-### B. Inisialisasi Subsistem Video
-Pada SDL3, `SDL_Init` mengembalikan nilai bertipe `Boolean` (`True` jika berhasil):
+### B. Inisialisasi Subsistem Video & Audio
+Pada SDL3, `SDL_Init` mengembalikan nilai bertipe `Boolean` (`True` jika berhasil). Kita dapat menginisialisasi subsistem video dan audio sekaligus:
 ```pascal
-if not SDL_Init(SDL_INIT_VIDEO) then
+if not SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO) then
 begin
-  WriteLn('Error: Gagal menginisialisasi subsistem video SDL3.');
+  WriteLn('Error: Gagal menginisialisasi subsistem video/audio SDL3.');
   Halt(1);
 end;
 ```
 
 ---
 
-### C. Membuat Jendela Aplikasi (*Window*)
-Pada SDL3, fungsi `SDL_CreateWindow` disederhanakan menjadi 4 parameter (posisi otomatis di tengah layar secara default):
+### C. Membuat Jendela Aplikasi (*Window Resizable*) & Presentasi Logika
+Pada SDL3, `SDL_CreateWindow` disederhanakan menjadi 4 parameter. Jendela dibuat dengan ukuran lebih lega (**1024x768**) dan flag `SDL_WINDOW_RESIZABLE` agar pemain dapat mengubah ukuran jendela maupun memaksimalkan layar (*maximize*).
+
+Agar seluruh koordinat gambar permainan (800x600) tetap konsisten dan tidak terdistorsi di berbagai resolusi layar, digunakan fitur bawaan SDL3 `SDL_SetRenderLogicalPresentation`:
 ```pascal
+// 1. Buat jendela 1024x768 yang dapat di-resize
 window := SDL_CreateWindow(
   'Math Worm - Game Cacing Edukasi Matematika',
-  800,                     { Lebar jendela: 800 piksel }
-  600,                     { Tinggi jendela: 600 piksel }
-  0                        { Window flags: 0 = jendela normal }
+  1024,
+  768,
+  SDL_WINDOW_RESIZABLE
 );
+
+// 2. Tempatkan jendela di tengah layar
+SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+// 3. Buat renderer hardware-accelerated
+renderer := SDL_CreateRenderer(window, nil);
+
+// 4. Kunci rasio resolusi logika ke 800x600 dengan letterboxing otomatis yang tajam
+SDL_SetRenderLogicalPresentation(renderer, 800, 600, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 ```
 
 ---
 
-### D. Membuat Mesin Gambar (*Renderer*)
-Renderer pada SDL3 dibuat dengan memilih nama backend grafis (`nil` untuk default hardware-accelerated GPU):
+### D. Sistem Audio & Sintesis Suara Mandiri (*SDL_AudioStream*)
+SDL3 menghadirkan arsitektur audio modern berbasis `SDL_AudioStream`. Game ini mensintesis gelombang suara chiptune 8-bit secara matematis (*algorithmic sound synthesis*) tanpa file WAV/MP3 eksternal:
 ```pascal
-renderer := SDL_CreateRenderer(window, nil);
+var
+  spec: TSDL_AudioSpec;
+  stream: PSDL_AudioStream;
+begin
+  spec.format := SDL_AUDIO_S16LE;
+  spec.channels := 1;
+  spec.freq := 44100;
+
+  // Buka stream audio ke perangkat pemutar standar
+  stream := SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, @spec, nil, nil);
+  SDL_ResumeAudioStreamDevice(stream);
+
+  // Alirkan buffer suara yang disintesis
+  SDL_PutAudioStreamData(stream, @buffer[0], bufferSize);
+end;
 ```
 
 ---

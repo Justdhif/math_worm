@@ -288,8 +288,8 @@ begin
   DrawText(renderer, 'KONTROL:', 140, 335, 2);
 
   SDL_SetRenderDrawColor(renderer, 180, 195, 215, 255);
-  DrawText(renderer, 'WASD / TOMBOL PANAH : MENGARAHKAN ULAR', 140, 358, 2);
-  DrawText(renderer, 'P : JEDA (PAUSE)    |  ESC : KELUAR', 140, 380, 2);
+  DrawText(renderer, 'WASD / TOMBOL PANAH : MENGARAHKAN ULAR', 140, 355, 2);
+  DrawText(renderer, 'B : MUSIK BGM ON/OFF  |  P : JEDA  |  ESC : KELUAR', 140, 377, 2);
 
   // Tombol Mulai
   btnRect.x := 200;
@@ -374,7 +374,7 @@ begin
   DrawTextCentered(renderer, 'ENTER: LANJUT MAIN', 400, 335, 2);
 
   SDL_SetRenderDrawColor(renderer, 140, 155, 175, 255);
-  DrawTextCentered(renderer, 'M: MENU UTAMA  |  ESC: KELUAR', 400, 395, 2);
+  DrawTextCentered(renderer, 'B: MUSIK ON/OFF  |  M: MENU  |  ESC: KELUAR', 400, 395, 2);
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 end;
